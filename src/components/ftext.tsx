@@ -7,7 +7,7 @@ export default function FText({ children, style, ...props }: TextProps) {
   const common = getCommonStyle(theme);
 
   return (
-    <Text style={[style, common.text]} {...props}>
+    <Text style={[common.text, style]} {...props}>
       {children}
     </Text>
   );

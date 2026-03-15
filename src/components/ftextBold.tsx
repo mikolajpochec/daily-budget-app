@@ -7,7 +7,7 @@ export default function FTextBold({ children, style, ...props }: TextProps) {
   const common = getCommonStyle(theme);
 
   return (
-    <Text style={[style, common.boldText]} {...props}>
+    <Text style={[common.boldText, style]} {...props}>
       {children}
     </Text>
   );

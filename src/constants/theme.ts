@@ -5,6 +5,7 @@ export const lightTheme = {
 	secondary: '#faf4e9',
 	text: '#1c1917',
 	secondaryText: '#6b6560',
+	minorText: '#a8a29c',
 	good: '#1a8c50',
 	bad: '#c23030',
 	badSecondary: '#9b4848'
@@ -17,6 +18,7 @@ export const darkTheme = {
 	secondary: '#1d1d28',
 	text: '#eeeaf4',
 	secondaryText: '#8888a0',
+	minorText: '#55556a',
 	good: '#45c77a',
 	bad: '#e85d5d',
 	badSecondary: '#9b4848'
