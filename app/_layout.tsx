@@ -1,4 +1,5 @@
 import { Stack } from 'expo-router';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { View, ActivityIndicator } from 'react-native';
 import { ThemeProvider } from '../src/context/themeContext';
 import { useFontAssets } from '../src/hooks/useFontAssets';
@@ -13,10 +14,12 @@ export default function RootLayout() {
 		);
 	}
 	return (
-		<ThemeProvider>
-			<Stack screenOptions={{ headerShown: false }}>
-				<Stack.Screen name="index" options={{ title: 'Home' }} />
-			</Stack>
-		</ThemeProvider>
+		<GestureHandlerRootView style={{ flex: 1 }}>
+			<ThemeProvider>
+				<Stack screenOptions={{ headerShown: false }}>
+					<Stack.Screen name="index" options={{ title: 'Home' }} />
+				</Stack>
+			</ThemeProvider>
+		</GestureHandlerRootView>
 	);
 }

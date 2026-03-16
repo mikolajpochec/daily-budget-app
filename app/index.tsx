@@ -1,3 +1,4 @@
+import React, { useCallback, useRef } from 'react';
 import { View, Text } from 'react-native';
 import { getLocales } from 'expo-localization';
 import { getCommonStyle } from '../src/styles/common';
@@ -7,6 +8,12 @@ import FTextBold from '../src/components/ftextBold';
 import IconButton from '../src/components/iconButton';
 import ExpensesList from '../src/components/expensesList';
 import Button from '../src/components/button';
+import {
+	BottomSheetModal,
+	BottomSheetView,
+	BottomSheetModalProvider,
+	BottomSheetTextInput
+} from '@gorhom/bottom-sheet';
 
 function formatLocalDayMonth() {
 	const date = new Date()
@@ -22,57 +29,97 @@ export default function HomeScreen() {
 	const { theme, isDarkMode, toggleTheme } = useTheme();
 	const common = getCommonStyle(theme);
 	const currency = 'USD'; // TODO: Let user choose currency
+	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+	const handlePresentModalPress = useCallback(() => {
+		bottomSheetModalRef.current?.present();
+	}, []);
+	const handleSheetChanges = useCallback((index: number) => {
+		console.log('handleSheetChanges', index);
+	}, []);
 	return (
-		<View style={[common.mainView]}>
-			<View style={common.dashHeader}>
-				<View>
-					<FText style={common.dateText}>{formatLocalDayMonth()}</FText>
-					<FTextBold style={[common.headerText, common.boldText]}>Daily Budget</FTextBold>
-				</View>
-				<IconButton iconName='settings-outline'/>
-			</View>
-			<View>
-				<View style={common.panel}>
-					<FText style={common.secondaryText}>REMAINING TODAY</FText>
-					<View style={common.amountContainer}>
-						<FText style={common.currency}>{currency}</FText>
-						<FTextBold style={common.bigAmount}>0.00</FTextBold>
+		<BottomSheetModalProvider>
+			<View style={[common.mainView]}>
+				<View style={common.dashHeader}>
+					<View>
+						<FText style={common.dateText}>{formatLocalDayMonth()}</FText>
+						<FTextBold style={[common.headerText, common.boldText]}>Daily Budget</FTextBold>
 					</View>
-					<FText style={common.secondaryText}>
-						of <FTextBold>0.00 {currency}</FTextBold> daily budget
-					</FText>
-					<View style={common.circleDecoration}/>
+					<IconButton iconName='settings-outline'/>
 				</View>
+				<View>
+					<View style={common.panel}>
+						<FText style={common.secondaryText}>REMAINING TODAY</FText>
+						<View style={common.amountContainer}>
+							<FText style={common.currency}>{currency}</FText>
+							<FTextBold style={common.bigAmount}>0.00</FTextBold>
+						</View>
+						<FText style={common.secondaryText}>
+							of <FTextBold>0.00 {currency}</FTextBold> daily budget
+						</FText>
+						<View style={common.circleDecoration}/>
+					</View>
+				</View>
+					<View style={common.statContainer}>
+					<View style={[common.panel, common.statCard]}>
+						<FText style={common.secondaryText}>SPENT TODAY</FText>
+						<FTextBold style={common.statAmount}>0.00 {currency}</FTextBold>
+							<FText style={common.minorText}>0 expenses</FText>
+					</View>
+						<View style={[common.panel, common.statCard]}>
+						<FText style={common.secondaryText}>DAYS LEFT</FText>
+							<FTextBold style={common.statAmount}>31</FTextBold>
+						<FText style={common.minorText}>in this period</FText>
+						</View>
+					</View>
+					<View style={common.statContainer}>
+					<View style={[common.panel, common.statCard]}>
+						<FText style={common.secondaryText}>MONTHLY SPENT</FText>
+						<FTextBold style={common.statAmount}>0.00 {currency}</FTextBold>
+							<FText style={common.minorText}>of ??? {currency}</FText>
+					</View>
+						<View style={[common.panel, common.statCard]}>
+						<FText style={common.secondaryText}>MONTHLY LEFT</FText>
+							<FTextBold style={common.statAmount}>0.00 {currency}</FTextBold>
+							<FText style={common.minorText}>Tommorow: ??? {currency}</FText>
+						</View>
+					</View>
+					<FTextBold>Today's expenses</FTextBold>
+					<View style={{ flex: 1, justifyContent: 'space-between' }}>
+						<ExpensesList count={0}/>
+						<Button
+							style={common.bottomMargin}
+							text='+   Add record'
+							onPress={handlePresentModalPress}
+						/>
+					</View>
 			</View>
-			<View style={common.statContainer}>
-				<View style={[common.panel, common.statCard]}>
-					<FText style={common.secondaryText}>SPENT TODAY</FText>
-					<FTextBold style={common.statAmount}>0.00 {currency}</FTextBold>
-					<FText style={common.minorText}>0 expenses</FText>
-				</View>
-				<View style={[common.panel, common.statCard]}>
-					<FText style={common.secondaryText}>DAYS LEFT</FText>
-					<FTextBold style={common.statAmount}>31</FTextBold>
-					<FText style={common.minorText}>in this period</FText>
-				</View>
-			</View>
-			<View style={common.statContainer}>
-				<View style={[common.panel, common.statCard]}>
-					<FText style={common.secondaryText}>MONTHLY SPENT</FText>
-					<FTextBold style={common.statAmount}>0.00 {currency}</FTextBold>
-					<FText style={common.minorText}>of ??? {currency}</FText>
-				</View>
-				<View style={[common.panel, common.statCard]}>
-					<FText style={common.secondaryText}>MONTHLY LEFT</FText>
-					<FTextBold style={common.statAmount}>0.00 {currency}</FTextBold>
-					<FText style={common.minorText}>Tommorow: ??? {currency}</FText>
-				</View>
-			</View>
-			<FTextBold>Today's expenses</FTextBold>
-			<View style={{flex: 1, justifyContent: 'space-between'}}>
-				<ExpensesList count={0}/>
-				<Button style={common.bottomMargin} text='+   Add record'/>
-			</View>
-		</View>
+
+				<BottomSheetModal
+					ref={bottomSheetModalRef}
+					onChange={handleSheetChanges}
+					backgroundStyle={common.modalHandle}
+					handleIndicatorStyle={common.modalHandleIndicator}
+				>
+					<BottomSheetView style={common.modal}>
+						<FTextBold style={common.headerText}>Add expense</FTextBold>
+						<View style={common.numInputContainer}>
+							<FTextBold 
+								style={[common.bigInputText, {color: theme.minorText}]}>
+								{currency}
+							</FTextBold>
+							<BottomSheetTextInput
+								style={[common.numInput, common.bigInputText]}
+								keyboardType="decimal-pad"
+								placeholder="0.00"
+								placeholderTextColor={theme.minorText}
+								paddingBottom={0}
+								paddingTop={0}
+							/>
+						</View>
+						<FText style={common.secondaryText}>CATEGORY</FText>
+					</BottomSheetView>
+				</BottomSheetModal>
+
+		</BottomSheetModalProvider>
 	);
 }

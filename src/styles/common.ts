@@ -112,6 +112,36 @@ export const getCommonStyle = (theme) => {
 		},
 		bottomMargin: {
 			marginBottom: DEFAULT_GAP
+		},
+		modalHandleIndicator: {
+			backgroundColor: `${theme.minorText}55`
+		},
+		modalHandle: {
+			backgroundColor: theme.foreground,
+			borderTopWidth: 1,
+			borderLeftWidth: 1,
+			borderRightWidth: 1,
+			borderColor: `${theme.minorText}55`,
+			borderRadius: 28
+		},
+		modal: {
+			backgroundColor: theme.foreground,
+			padding: DEFAULT_GAP
+		},
+		bigInputText: {
+			fontSize: 38,
+		},
+		numInputContainer: {
+			flexDirection: 'row',
+			borderBottomWidth: 1,
+			borderBottomColor: theme.primary,
+			alignItems: 'center',
+			marginBottom: DEFAULT_GAP
+		},
+		numInput: {
+			fontFamily: 'Bricolage Grotesque Bold',
+			color: theme.text,
+			flex: 1,
 		}
 	})
 }
