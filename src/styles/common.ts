@@ -110,6 +110,13 @@ export const getCommonStyle = (theme) => {
 			justifyContent: 'center',
 			alignItems: 'center'
 		},
+		buttonDisabled: {
+			borderRadius: 18,
+			height: 54,
+			backgroundColor: `${theme.primary}55`,
+			justifyContent: 'center',
+			alignItems: 'center'
+		},
 		bottomMargin: {
 			marginBottom: DEFAULT_GAP
 		},
@@ -142,6 +149,48 @@ export const getCommonStyle = (theme) => {
 			fontFamily: 'Bricolage Grotesque Bold',
 			color: theme.text,
 			flex: 1,
+		},
+		list: {
+			marginBottom: DEFAULT_GAP,
+			borderRadius: 10
+		},
+		listSeparator: {
+			height: DEFAULT_GAP
+		},
+		listEntryContainer: {
+			backgroundColor: theme.foreground,
+			padding: DEFAULT_GAP,
+			borderRadius: 14,
+			flexDirection: 'row',
+			alignItems: 'center'
+		},
+		listEntryCenter: {
+			flex: 1,
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'center',
+			paddingLeft: DEFAULT_GAP,
+			paddingRight: DEFAULT_GAP
+		},
+		listEntryIcon: {
+			backgroundColor: `${theme.primary}55`,
+			height: 36,
+			width: 36,
+			justifyContent: 'center',
+			alignItems: 'center',
+			borderRadius: 10,
+			alignSelf: 'center'
+		},
+		removeButton: {
+			backgroundColor: `${theme.bad}22`,
+			width: 30,
+			height: 30,
+			justifyContent: 'center',
+			alignItems: 'center',
+			borderRadius: 10,
+		},
+		removeButtonIcon: {
+			color: theme.bad
 		}
 	})
 }

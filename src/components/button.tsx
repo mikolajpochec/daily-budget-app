@@ -5,17 +5,24 @@ import FTextBold from '../components/ftextBold';
 
 type ButtonProps = {
 	onPress?: () => void,
-	text: string,
-	style?: StyleProp<ViewStyle>
+		text: string,
+	style?: StyleProp<ViewStyle>,
+	disabled: boolean
 };
 
-export default function Button({onPress, text, style}: ButtonProps) {
+export default function Button({onPress, text, style, disabled}: ButtonProps) {
 	const { theme, isDarkMode, toggleTheme } = useTheme();
 	const common = getCommonStyle(theme);
 	return (
-		<TouchableOpacity onPress={onPress} activeOpacity={0.7}>
-			<View style={[common.button, style]}>
-				<FTextBold style={{ color: theme.foreground }}>{text}</FTextBold>
+		<TouchableOpacity 
+			onPress={onPress} 
+			activeOpacity={0.7}
+			accessibilityState={{ disabled: disabled }}
+		>
+			<View style={[disabled ? common.buttonDisabled: common.button, style]}>
+				<FTextBold style={{ color: theme.foreground }}>
+					{text}
+				</FTextBold>
 			</View>
 		</TouchableOpacity>
 	);
