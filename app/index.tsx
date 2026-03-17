@@ -55,6 +55,7 @@ export default function HomeScreen() {
 	return (
 		<BottomSheetModalProvider>
 			<View style={[common.mainView]}>
+				{/* --- BEGIN HEADER --- */}
 				<View style={common.dashHeader}>
 					<View>
 						<FText style={common.dateText}>{formatLocalDayMonth()}</FText>
@@ -62,7 +63,9 @@ export default function HomeScreen() {
 					</View>
 					<IconButton iconName='settings-outline'/>
 				</View>
+				{/* --- END HEADER --- */}
 
+				{/* --- BEGIN PANEL --- */}
 				<View>
 					<View style={common.panel}>
 						<FText style={common.secondaryText}>REMAINING TODAY</FText>
@@ -76,7 +79,9 @@ export default function HomeScreen() {
 						<View style={common.circleDecoration}/>
 					</View>
 				</View>
+				{/* --- END PANEL --- */}
 
+				{/* --- BEGIN CARDS --- */}
 				<View style={common.statContainer}>
 					<View style={[common.panel, common.statCard]}>
 						<FText style={common.secondaryText}>SPENT TODAY</FText>
@@ -102,6 +107,7 @@ export default function HomeScreen() {
 						<FText style={common.minorText}>Tommorow: ??? {currency}</FText>
 					</View>
 				</View>
+				{/* --- END CARDS --- */}
 
 				<FTextBold>Today's expenses</FTextBold>
 
