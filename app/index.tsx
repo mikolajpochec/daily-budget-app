@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState} from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { getLocales } from 'expo-localization';
 import { getCommonStyle } from '../src/styles/common';
 import { useTheme } from '../src/hooks/useTheme';
@@ -8,53 +8,8 @@ import FTextBold from '../src/components/ftextBold';
 import IconButton from '../src/components/iconButton';
 import ExpensesList from '../src/components/expensesList';
 import Button from '../src/components/button';
-import ChipGroup from '../src/components/chipGroup';
-import {
-	BottomSheetModal,
-	BottomSheetView,
-	BottomSheetModalProvider,
-	BottomSheetTextInput
-} from '@gorhom/bottom-sheet';
-
-const mockData = [
-	{
-		id: 1,
-		category: "Food",
-		unixTime: 1710000000000,
-		description: "Lunch",
-		amount: 12.5,
-	},
-	{
-		id: 2,
-		category: "Transport",
-		unixTime: 1710100000000,
-		amount: 3.2,
-	},
-	{
-		id: 3,
-		category: "Transport",
-		unixTime: 1710100000000,
-		amount: 3.2,
-	},
-	{
-		id: 4,
-		category: "Transport",
-		unixTime: 1710100000000,
-		amount: 3.2,
-	},
-];
-
-const categories = [
-	{ id: 0, emoji: '🍔', text: 'Food' },
-	{ id: 1, emoji: '🚗', text: 'Transport' },
-	{ id: 2, emoji: '☕', text: 'Coffee' },
-	{ id: 3, emoji: '🛍️', text: 'Shopping' },
-	{ id: 4, emoji: '🎉', text: 'Fun' },
-	{ id: 5, emoji: '🏥', text: 'Health' },
-	{ id: 6, emoji: '💊', text: 'Health' },
-	{ id: 7, emoji: '💸', text: 'Bills' },
-	{ id: 8, emoji: '📦', text: 'Other' },
-];
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import ExpenseModal from '../src/components/expenseModal';
 
 function formatLocalDayMonth() {
 	const date = new Date()
@@ -67,20 +22,36 @@ function formatLocalDayMonth() {
 }
 
 export default function HomeScreen() {
-	const [data, setData] = useState(mockData);
+	const [data, setData] = useState([]);
 	const [currency, setCurrency] = useState("USD");
-	const { theme, isDarkMode, toggleTheme } = useTheme();
+	const { theme } = useTheme();
 	const common = getCommonStyle(theme);
-	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+	const modalRef = useRef<any>(null);
+
 	const handlePresentModalPress = useCallback(() => {
-		bottomSheetModalRef.current?.present();
+		modalRef.current?.present();
 	}, []);
-	const handleSheetChanges = useCallback((index: number) => {
-		console.log('handleSheetChanges', index);
-	}, []);
+
 	const onEntryRemoveRequest = (id: number) => {
 		setData(prevData => prevData.filter(e => e.id !== id));
 	};
+
+	const handleExpenseSubmit = (
+		{ amount, categoryText, description } 
+			: { amount: string; categoryText: string; description: string }
+	) => {
+		setData(prev => [
+			...prev,
+			{
+				id: Date.now(),
+				category: categoryText,
+				unixTime: Date.now(),
+				amount: Number(amount),
+				description: description
+			}
+		]);
+	};
+
 	return (
 		<BottomSheetModalProvider>
 			<View style={[common.mainView]}>
@@ -91,6 +62,7 @@ export default function HomeScreen() {
 					</View>
 					<IconButton iconName='settings-outline'/>
 				</View>
+
 				<View>
 					<View style={common.panel}>
 						<FText style={common.secondaryText}>REMAINING TODAY</FText>
@@ -104,6 +76,7 @@ export default function HomeScreen() {
 						<View style={common.circleDecoration}/>
 					</View>
 				</View>
+
 				<View style={common.statContainer}>
 					<View style={[common.panel, common.statCard]}>
 						<FText style={common.secondaryText}>SPENT TODAY</FText>
@@ -116,6 +89,7 @@ export default function HomeScreen() {
 						<FText style={common.minorText}>in this period</FText>
 					</View>
 				</View>
+
 				<View style={common.statContainer}>
 					<View style={[common.panel, common.statCard]}>
 						<FText style={common.secondaryText}>MONTHLY SPENT</FText>
@@ -128,7 +102,9 @@ export default function HomeScreen() {
 						<FText style={common.minorText}>Tommorow: ??? {currency}</FText>
 					</View>
 				</View>
+
 				<FTextBold>Today's expenses</FTextBold>
+
 				<View style={{ flex: 1, justifyContent: 'space-between' }}>
 					<ExpensesList 
 						count={data.length} 
@@ -136,6 +112,7 @@ export default function HomeScreen() {
 						currency={currency}
 						onEntryRemoveRequest={onEntryRemoveRequest}
 					/>
+
 					<Button
 						style={common.bottomMargin}
 						text='+   Add record'
@@ -144,44 +121,15 @@ export default function HomeScreen() {
 				</View>
 			</View>
 
-			<BottomSheetModal
-				ref={bottomSheetModalRef}
-				onChange={handleSheetChanges}
-				backgroundStyle={common.modalHandle}
-				handleIndicatorStyle={common.modalHandleIndicator}
-			>
-				<BottomSheetView style={common.modal}>
-					<FTextBold style={common.headerText}>Add expense</FTextBold>
-					<View style={common.numInputContainer}>
-						<FTextBold 
-							style={[common.bigInputText, {color: theme.minorText}]}>
-							{currency}
-						</FTextBold>
-						<BottomSheetTextInput
-							style={[common.numInput, common.bigInputText]}
-							keyboardType="decimal-pad"
-							placeholder="0.00"
-							placeholderTextColor={theme.minorText}
-							paddingBottom={0}
-							paddingTop={0}
-						/>
-					</View>
-					<FText style={common.secondaryText}>CATEGORY</FText>
-					<ChipGroup data={categories} onSelectChip={
-						({id, emoji, text}) => {}
-					} defaultSelectedIndex={0}/>
-					<FText style={common.secondaryText}>
-						DESCRIPTION <FText style={common.minorText}>(optional)</FText>
-					</FText>
-					<Button
-						style={common.bottomMargin}
-						text='Save'
-						onPress={handlePresentModalPress}
-						disabled={true}
-					/>
-				</BottomSheetView>
-			</BottomSheetModal>
+			<ExpenseModal
+				ref={modalRef}
+				currency={currency}
+				onSubmit={handleExpenseSubmit}
+			/>
 
 		</BottomSheetModalProvider>
 	);
 }
+
+
+

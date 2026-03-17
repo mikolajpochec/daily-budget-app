@@ -214,6 +214,15 @@ export const getCommonStyle = (theme) => {
 			paddingVertical: DEFAULT_GAP * 0.4,
 			borderRadius: 10,
 		},
+		textInput: {
+			color: theme.text,
+			paddingVertical: DEFAULT_GAP * 0.8,
+			paddingHorizontal: DEFAULT_GAP * 0.68,
+			marginVertical: DEFAULT_GAP * 0.75,
+			borderRadius: 12,
+			borderWidth: 1,
+			borderColor: `${theme.minorText}55`,
+		}
 	})
 }
 

@@ -53,8 +53,8 @@ function ExpenseListItem({ item, currency, onEntryRemoveRequest }: ExpensesListI
 				<View>
 					<FTextBold>{item.category}</FTextBold>
 					<FText style={common.minorText}>
-						{item.description ? `${item.description}  ·  ` : ''}
 						{time}
+						{item.description ? `  ·  ${item.description}` : ''}
 					</FText>
 				</View>
 				<FTextBold>{item.amount} {currency}</FTextBold>
@@ -66,7 +66,6 @@ function ExpenseListItem({ item, currency, onEntryRemoveRequest }: ExpensesListI
 	);
 }
 
-// Placeholder for an actual list
 export default function ExpensesList({
 	count, 
 	data, 
