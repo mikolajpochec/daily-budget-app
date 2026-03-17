@@ -8,6 +8,7 @@ import FTextBold from '../src/components/ftextBold';
 import IconButton from '../src/components/iconButton';
 import ExpensesList from '../src/components/expensesList';
 import Button from '../src/components/button';
+import ChipGroup from '../src/components/chipGroup';
 import {
 	BottomSheetModal,
 	BottomSheetView,
@@ -15,7 +16,7 @@ import {
 	BottomSheetTextInput
 } from '@gorhom/bottom-sheet';
 
-const mockData: Entry[] = [
+const mockData = [
 	{
 		id: 1,
 		category: "Food",
@@ -41,6 +42,18 @@ const mockData: Entry[] = [
 		unixTime: 1710100000000,
 		amount: 3.2,
 	},
+];
+
+const categories = [
+	{ id: 0, emoji: '🍔', text: 'Food' },
+	{ id: 1, emoji: '🚗', text: 'Transport' },
+	{ id: 2, emoji: '☕', text: 'Coffee' },
+	{ id: 3, emoji: '🛍️', text: 'Shopping' },
+	{ id: 4, emoji: '🎉', text: 'Fun' },
+	{ id: 5, emoji: '🏥', text: 'Health' },
+	{ id: 6, emoji: '💊', text: 'Health' },
+	{ id: 7, emoji: '💸', text: 'Bills' },
+	{ id: 8, emoji: '📦', text: 'Other' },
 ];
 
 function formatLocalDayMonth() {
@@ -154,6 +167,9 @@ export default function HomeScreen() {
 						/>
 					</View>
 					<FText style={common.secondaryText}>CATEGORY</FText>
+					<ChipGroup data={categories} onSelectChip={
+						({id, emoji, text}) => {}
+					} defaultSelectedIndex={0}/>
 					<FText style={common.secondaryText}>
 						DESCRIPTION <FText style={common.minorText}>(optional)</FText>
 					</FText>

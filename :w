@@ -194,26 +194,17 @@ export const getCommonStyle = (theme) => {
 		},
 		chipGroup: {
 			flexDirection: 'row',
-			gap: DEFAULT_GAP * 0.38,
-			flexWrap: 'wrap',
-			marginVertical: DEFAULT_GAP
+			columnGap: DEFAULT_GAP / 2,
+			rowGap: DEFAULT_GAP / 2,
+			flexWrap: 'wrap'
 		},
 		chip: {
 			borderWidth: 1,
 			borderColor: `${theme.minorText}55`,
-			backgroundColor: theme.foreground,
 			paddingHorizontal: DEFAULT_GAP * 0.8,
 			paddingVertical: DEFAULT_GAP * 0.4,
 			borderRadius: 10
-		},
-		selectedChip: {
-			borderWidth: 1,
-			borderColor: theme.primary,
-			backgroundColor: `${theme.primary}22`,
-			paddingHorizontal: DEFAULT_GAP * 0.8,
-			paddingVertical: DEFAULT_GAP * 0.4,
-			borderRadius: 10,
-		},
+		}
 	})
 }
 

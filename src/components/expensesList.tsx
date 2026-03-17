@@ -16,7 +16,7 @@ export type ExpenseEntry = {
 	amount: number;
 };
 
-export type ExpensesListProps = {
+type ExpensesListProps = {
 	count: number;
 	data: ExpenseEntry[];
 	currency: string;
@@ -43,6 +43,7 @@ function ExpenseListItem({ item, currency, onEntryRemoveRequest }: ExpensesListI
 			<View style={common.listEntryIcon}>
 				<Ionicons 
 					size={16}
+					style={{color: theme.secondary}}
 					name='compass' 
 				/>
 			</View>

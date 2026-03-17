@@ -3,7 +3,7 @@ import { TouchableOpacity, View } from 'react-native';
 import { getCommonStyle } from '../styles/common';
 import { useTheme } from '../hooks/useTheme';
 
-type IconButtonProps = {
+export type IconButtonProps = {
 	iconName: string,
 	onPress?: () => void;
 };
