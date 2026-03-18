@@ -26,7 +26,7 @@ export default function HomeScreen() {
 	const [currency, setCurrency] = useState("USD");
 	const { theme } = useTheme();
 	const common = getCommonStyle(theme);
-	const modalRef = useRef<any>(null);
+	const modalRef = useRef(null);
 
 	const handlePresentModalPress = useCallback(() => {
 		modalRef.current?.present();
@@ -36,9 +36,8 @@ export default function HomeScreen() {
 		setData(prevData => prevData.filter(e => e.id !== id));
 	};
 
-	const handleExpenseSubmit = (
-		{ amount, categoryText, description } 
-			: { amount: string; categoryText: string; description: string }
+	const handleExpenseSubmit = ({ amount, categoryText, description } 
+		: { amount: string; categoryText: string; description: string }
 	) => {
 		setData(prev => [
 			...prev,
@@ -110,7 +109,6 @@ export default function HomeScreen() {
 				{/* --- END CARDS --- */}
 
 				<FTextBold>Today's expenses</FTextBold>
-
 				<View style={{ flex: 1, justifyContent: 'space-between' }}>
 					<ExpensesList 
 						count={data.length} 
