@@ -10,7 +10,7 @@ export const getCommonStyle = (theme) => {
 			gap: DEFAULT_GAP,
 			flex: 1
 		},
-		dashHeader: {
+		apart: {
 			flexDirection: 'row',
 			alignItems: 'center',
 			justifyContent: 'space-between',
@@ -35,11 +35,13 @@ export const getCommonStyle = (theme) => {
 			borderWidth: 1,
 			borderColor: `${theme.secondaryText}33`,
 			backgroundColor: theme.foreground,
-			paddingLeft: DEFAULT_GAP,
-			paddingRight: DEFAULT_GAP,
-			paddingTop: DEFAULT_GAP * 1.25,
-			paddingBottom: DEFAULT_GAP * 1.25,
+			paddingHorizontal: DEFAULT_GAP,
+			paddingVertical: DEFAULT_GAP * 1.25,
 			overflow: 'hidden'
+		},
+		lessPaddingForPanel:{
+			borderRadius: 12,
+			paddingVertical: DEFAULT_GAP,
 		},
 		iconButton: {
 			width: 38,
@@ -61,6 +63,11 @@ export const getCommonStyle = (theme) => {
 		minorText: {
 			color: theme.minorText,
 			fontSize: 11
+		},
+		sectionHeader: {
+			marginBottom: 0,
+			color: theme.minorText,
+			fontSize: 12,
 		},
 		currency: {
 			color: theme.primary,
@@ -222,6 +229,14 @@ export const getCommonStyle = (theme) => {
 			borderRadius: 12,
 			borderWidth: 1,
 			borderColor: `${theme.minorText}55`,
+		},
+		stackHeader: {
+			flexDirection: 'row',
+			gap: DEFAULT_GAP,
+			alignItems: 'center'
+		},
+		listLike: {
+			gap: DEFAULT_GAP * 0.5
 		}
 	})
 }

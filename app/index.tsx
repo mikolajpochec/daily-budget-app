@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState} from 'react';
+import { useRouter } from 'expo-router';
 import { View } from 'react-native';
 import { getLocales } from 'expo-localization';
 import { getCommonStyle } from '../src/styles/common';
@@ -26,6 +27,7 @@ export default function HomeScreen() {
 	const [currency, setCurrency] = useState("USD");
 	const { theme } = useTheme();
 	const common = getCommonStyle(theme);
+	const router = useRouter();
 	const modalRef = useRef(null);
 
 	const handlePresentModalPress = useCallback(() => {
@@ -55,12 +57,17 @@ export default function HomeScreen() {
 		<BottomSheetModalProvider>
 			<View style={[common.mainView]}>
 				{/* --- BEGIN HEADER --- */}
-				<View style={common.dashHeader}>
+				<View style={common.apart}>
 					<View>
 						<FText style={common.dateText}>{formatLocalDayMonth()}</FText>
-						<FTextBold style={[common.headerText, common.boldText]}>Daily Budget</FTextBold>
+						<FTextBold style={[common.headerText, common.boldText]}>
+							Daily Budget
+						</FTextBold>
 					</View>
-					<IconButton iconName='settings-outline'/>
+					<IconButton 
+						iconName='settings-outline'
+						onPress={()=>{ router.navigate(`/settings?currency=${currency}`) }}
+					/>
 				</View>
 				{/* --- END HEADER --- */}
 
