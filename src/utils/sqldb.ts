@@ -5,7 +5,10 @@ var db;
 var sql;
 
 function getLocalDateString(date: Date) {
-	return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  const year  = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day   = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 export async function initDB() {
@@ -22,14 +25,29 @@ export async function initDB() {
 }
 
 export async function getPeriodSpendingData(startDate: Date, endDate: Date) {
+	const start = new Date(getLocalDateString(startDate)).getTime();
+	const end = new Date(getLocalDateString(endDate)).getTime();
+	const now = new Date();
+	const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+	const startOfYesterday = startOfToday - 86_400_000;
+	const result = await db.getFirstAsync<{
+		spentYesterday:   number | null;
+		spentBeforeToday: number | null;
+		spentToday:       number | null;
+	}>(`
+	   SELECT
+	   SUM(amount) FILTER (WHERE createdAt >= ? AND createdAt < ?) AS spentYesterday,
+	   SUM(amount) FILTER (WHERE createdAt < ?)                    AS spentBeforeToday,
+	   SUM(amount) FILTER (WHERE createdAt >= ?)                   AS spentToday
+	   FROM expenses
+	   WHERE createdAt >= ? AND createdAt <= ?
+		   `, [startOfYesterday, startOfToday, startOfToday, startOfToday, start, end]);
 
-	const query = `
-	SELECT
-	SUM(amount) FILTER (WHERE createdAt >= $2 AND createdAt < $3)   AS spentYesterday,
-	SUM(amount) FILTER (WHERE createdAt < $3)                   	AS spentBeforeToday,
-	SUM(amount) FILTER (WHERE createdAt >= $3)                      AS spentToday
-	FROM expenses WHERE createdAt >= $1 AND createdAt <= $2  
-	`
+	   return {
+		   spentYesterday:   result?.spentYesterday   ?? 0,
+		   spentBeforeToday: result?.spentBeforeToday ?? 0,
+		   spentToday:       result?.spentToday       ?? 0,
+	   };
 }
 
 export async function getDailyExpenses(date: Date) : Expense[] {
