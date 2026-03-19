@@ -7,24 +7,17 @@ import { getLocales } from 'expo-localization';
 import FText from './ftext';
 import FTextBold from './ftextBold';
 import RemoveButton from './removeButton';
-
-export type ExpenseEntry = {
-	id: number;
-	category: string;
-	unixTime: number; 
-	description?: string;
-	amount: number;
-};
+import Expense from '../types/expense.ts';
 
 type ExpensesListProps = {
 	count: number;
-	data: ExpenseEntry[];
+	data: Expense[];
 	currency: string;
 	onEntryRemoveRequest: (id: number) => void;
 };
 
 export type ExpensesListItemProps = {
-	item: ExpenseEntry;
+	item: Expense;
 	currency: string;
 	onEntryRemoveRequest: (id: number) => void;
 }
@@ -37,9 +30,9 @@ function ExpenseListItem({ item, currency, onEntryRemoveRequest }: ExpensesListI
 	const time = new Intl.DateTimeFormat(locale, {
 		hour: 'numeric',
 		minute: '2-digit',
-	}).format(new Date(item.unixTime));
+	}).format(new Date(item.createdAt));
 	return (
-		<View style={common.listEntryContainer}>
+		<View style={[common.listEntryContainer]}>
 			<View style={common.listEntryIcon}>
 				<Ionicons 
 					size={16}
