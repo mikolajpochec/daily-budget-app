@@ -7,7 +7,8 @@ import { getLocales } from 'expo-localization';
 import FText from './ftext';
 import FTextBold from './ftextBold';
 import RemoveButton from './removeButton';
-import Expense from '../types/expense.ts';
+import Expense from '../types/expense';
+import { categories } from '../constants/categories';
 
 type ExpensesListProps = {
 	count: number;
@@ -34,11 +35,7 @@ function ExpenseListItem({ item, currency, onEntryRemoveRequest }: ExpensesListI
 	return (
 		<View style={[common.listEntryContainer]}>
 			<View style={common.listEntryIcon}>
-				<Ionicons 
-					size={16}
-					style={{color: theme.secondary}}
-					name='compass' 
-				/>
+				<FText>{categories.find((e) => e.text === item.category)?.emoji}</FText>
 			</View>
 			<View 
 				style={common.listEntryCenter}

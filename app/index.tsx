@@ -19,16 +19,6 @@ import {
 	removeExpense
 } from '../src/utils/sqldb.ts';
 
-function formatLocalDayMonth() {
-	const date = new Date()
-	const locale = getLocales()[0].languageTag;
-	const dayName = new Intl.DateTimeFormat(locale, { weekday: 'long' }).format(date);
-	const dayNumber = date.getDate();
-	const monthName = new Intl.DateTimeFormat(locale, { month: 'long' }).format(date);
-
-	return `${dayName} ${dayNumber} ${monthName}`;
-}
-
 export default function HomeScreen() {
 	const [data, setData] = useState([]);
 	const [currency, setCurrency] = useState("USD");
@@ -36,6 +26,15 @@ export default function HomeScreen() {
 	const common = getCommonStyle(theme);
 	const router = useRouter();
 	const modalRef = useRef(null);
+
+	const formatLocalDayMonth = () =>  {
+		const date = new Date()
+		const locale = getLocales()[0].languageTag;
+		const dayName = new Intl.DateTimeFormat(locale, { weekday: 'long' }).format(date);
+		const dayNumber = date.getDate();
+		const monthName = new Intl.DateTimeFormat(locale, { month: 'long' }).format(date);
+		return `${dayName} ${dayNumber} ${monthName}`;
+	}
 
 	const handlePresentModalPress = useCallback(() => {
 		modalRef.current?.present();
