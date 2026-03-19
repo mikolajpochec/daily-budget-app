@@ -5,7 +5,7 @@ var db;
 var sql;
 
 function getLocalDateString(date: Date) {
-	return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+	return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
 
 export async function initDB() {
@@ -19,6 +19,17 @@ export async function initDB() {
 		createdAt   INTEGER,
 		localDate   TEXT
 	);`);
+}
+
+export async function getPeriodSpendingData(startDate: Date, endDate: Date) {
+
+	const query = `
+	SELECT
+	SUM(amount) FILTER (WHERE createdAt >= $2 AND createdAt < $3)   AS spentYesterday,
+	SUM(amount) FILTER (WHERE createdAt < $3)                   	AS spentBeforeToday,
+	SUM(amount) FILTER (WHERE createdAt >= $3)                      AS spentToday
+	FROM expenses WHERE createdAt >= $1 AND createdAt <= $2  
+	`
 }
 
 export async function getDailyExpenses(date: Date) : Expense[] {
