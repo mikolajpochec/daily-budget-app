@@ -21,10 +21,10 @@ export async function initDB() {
 	);`);
 }
 
-export async function getDailyExpenses(date: Date) : ExpenseDBEntry[] {
+export async function getDailyExpenses(date: Date) : Expense[] {
 	const localDate = getLocalDateString(date);
 	const result = 
-		await sql<ExpenseDBEntry>`SELECT * FROM expenses WHERE localDate=${localDate}`;
+		await sql<Expense>`SELECT * FROM expenses WHERE localDate=${localDate}`;
 	return result;
 }
 
@@ -42,27 +42,28 @@ export async function addExpense(
 	const createdAt = now.getTime();
 	const localDate = getLocalDateString(now);
 
-	const statement = await db.prepareAsync(`INSERT INTO expenses (amount, category, description, createdAt, localDate)
-											VALUES ($amount, $category, $description, $createdAt, $localDate)`);
+	const statement = await db.prepareAsync(
+		`INSERT INTO expenses (amount, category, description, createdAt, localDate)
+		VALUES ($amount, $category, $description, $createdAt, $localDate)`);
 
-											try {
-												const result = await statement.executeAsync({
-													$amount: amount,
-													$category: category,
-													$description: description || null,
-													$createdAt: createdAt,
-													$localDate: localDate,
-												});
+		try {
+			const result = await statement.executeAsync({
+				$amount: amount,
+				$category: category,
+				$description: description || null,
+				$createdAt: createdAt,
+				$localDate: localDate,
+			});
 
-												return {
-													id: result.lastInsertRowId,
-													amount,
-													category,
-													description,
-													createdAt,
-													localDate,
-												};
-											} finally {
-												await statement.finalizeAsync();
-											}
+			return {
+				id: result.lastInsertRowId,
+				amount,
+				category,
+				description,
+				createdAt,
+				localDate,
+			};
+		} finally {
+			await statement.finalizeAsync();
+		}
 }
