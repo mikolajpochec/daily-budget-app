@@ -20,9 +20,6 @@ export async function setKey(key, value) {
 export async function getValue(key) {
 	try {
 		const value = await AsyncStorage.getItem(key);
-		if(value === null) {
-			displayErrorAlert(`Could not retrieve value for '${key}'.`);
-		}
 		return value;
 	} catch(e) {
 		displayErrorAlert(e.message);
