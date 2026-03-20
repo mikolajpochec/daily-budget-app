@@ -9,19 +9,24 @@ function displayErrorAlert(msg) {
 	]);
 }
 
-export async function setKey(key, value) {
+export async function setKey(key: string, value: any) {
 	try {
 		await AsyncStorage.setItem(key, value);
+		console.log(`Key '${key}' set to value '${value}'.`);
 	} catch(e) {
 		displayErrorAlert(e.message);
 	}
 }
 
-export async function getValue(key) {
+export async function getValue(key: string) {
 	try {
 		const value = await AsyncStorage.getItem(key);
 		return value;
 	} catch(e) {
 		displayErrorAlert(e.message);
 	}
+}
+
+export async function clearStorage() {
+	await AsyncStorage.clear();
 }

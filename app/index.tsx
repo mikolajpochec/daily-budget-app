@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
-import { View } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { getLocales } from 'expo-localization';
 import { getCommonStyle } from '../src/styles/common';
 import { useTheme } from '../src/hooks/useTheme';
@@ -18,10 +18,15 @@ import {
 	addExpense,
 	removeExpense
 } from '../src/utils/sqldb.ts';
+import { getValue, clearStorage } from '../src/utils/storage.ts';
 
 export default function HomeScreen() {
-	const [data, setData] = useState([]);
+	const [expensesData, setExpensesData] = useState([]);
+	const [onboarded, setOnboarded] = useState(false);
 	const [currency, setCurrency] = useState("USD");
+	const [startDay, setStartDay] = useState(1);
+	const [monthlyBudget, setMonthlyBudget] = useState(null);
+	const [strategy, setStrategy] = useState(null);
 	const { theme } = useTheme();
 	const common = getCommonStyle(theme);
 	const router = useRouter();
@@ -43,7 +48,7 @@ export default function HomeScreen() {
 	const onEntryRemoveRequest = async (id: number) => {
 		const success = await removeExpense(id);
 		if(success) {
-			setData(prevData => prevData.filter(e => e.id !== id));
+			setExpensesData(prevData => prevData.filter(e => e.id !== id));
 		}
 	};
 
@@ -59,21 +64,41 @@ export default function HomeScreen() {
 		}
 	) => {			
 		const result = await addExpense(amount, categoryText, description);
-		setData(prev => [...prev, result]);
+		setExpensesData(prev => [...prev, result]);
 	};
 
 	useEffect(() => {
 		const db = async () => {
 			await initDB();
 			const expenses = await getDailyExpenses(new Date());
-			setData(expenses);
+			setExpensesData(expenses);
 		}
 		db();
+		(async () => {
+			const isOnboarded = await getValue('onboarded') == 'true';
+			console.log(`Is onboarded: ${isOnboarded}`);
+			if(!isOnboarded) {
+				router.navigate('/onboarding');
+			}
+			setCurrency(await getValue('currency'));
+			setStartDay(parseInt(await getValue('start-day')));
+			setMonthlyBudget(parseInt(await getValue('monthly-budget')));
+			setStrategy(await getValue('strategy'));
+			setOnboarded(isOnboarded);
+		})();
 	}, []);
+
+	if(onboarded !== true) {
+		return (
+			<View style={[common.mainView, { justifyContent: 'center' }]}>
+				<ActivityIndicator size="large"/>
+			</View>
+		);
+	}
 
 	return (
 		<BottomSheetModalProvider>
-			<View style={[common.mainView]}>
+			<View style={common.mainView}>
 				{/* --- BEGIN HEADER --- */}
 				<View style={common.apart}>
 					<View>
@@ -84,7 +109,17 @@ export default function HomeScreen() {
 					</View>
 					<IconButton 
 						iconName='settings-outline'
-						onPress={()=>{ router.navigate(`/settings?currency=${currency}`) }}
+						onPress={()=>{ 
+							router.navigate({
+								pathname: '/settings',
+								params: {
+									currency,
+									startDay,
+									monthlyBudget,
+									strategy
+								},
+							});
+						}}
 					/>
 				</View>
 				{/* --- END HEADER --- */}
@@ -138,8 +173,8 @@ export default function HomeScreen() {
 				<FTextBold>Today's expenses</FTextBold>
 				<View style={{ flex: 1, justifyContent: 'space-between' }}>
 					<ExpensesList 
-						count={data.length} 
-						data={data}
+						count={expensesData.length} 
+						data={expensesData}
 						currency={currency}
 						onEntryRemoveRequest={onEntryRemoveRequest}
 					/>

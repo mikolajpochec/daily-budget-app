@@ -12,16 +12,18 @@ function getLocalDateString(date: Date) {
 }
 
 export async function initDB() {
-	db = await SQLite.openDatabaseAsync('transactions.db');
-	sql = db.sql;
-	await db.execAsync(`CREATE TABLE IF NOT EXISTS expenses (
-		id          INTEGER PRIMARY KEY AUTOINCREMENT,
-		amount      REAL NOT NULL CHECK (amount > 0),
-		category    TEXT NOT NULL,
-		description TEXT,
-		createdAt   INTEGER,
-		localDate   TEXT
-	);`);
+	if(!db) {
+		db = await SQLite.openDatabaseAsync('transactions.db');
+		sql = db.sql;
+		await db.execAsync(`CREATE TABLE IF NOT EXISTS expenses (
+			id          INTEGER PRIMARY KEY AUTOINCREMENT,
+			amount      REAL NOT NULL CHECK (amount > 0),
+			category    TEXT NOT NULL,
+			description TEXT,
+			createdAt   INTEGER,
+			localDate   TEXT
+		);`);
+	}
 }
 
 export async function getPeriodSpendingData(startDate: Date, endDate: Date) {
@@ -37,7 +39,7 @@ export async function getPeriodSpendingData(startDate: Date, endDate: Date) {
 	}>(`
 	   SELECT
 	   SUM(amount) FILTER (WHERE createdAt >= ? AND createdAt < ?) AS spentYesterday,
-	   SUM(amount) FILTER (WHERE createdAt < ?)                    AS spentBeforeToday,
+		   SUM(amount) FILTER (WHERE createdAt < ?)                    AS spentBeforeToday,
 	   SUM(amount) FILTER (WHERE createdAt >= ?)                   AS spentToday
 	   FROM expenses
 	   WHERE createdAt >= ? AND createdAt <= ?
@@ -60,6 +62,10 @@ export async function getDailyExpenses(date: Date) : Expense[] {
 export async function removeExpense(id: number) {
 	const result = await db.runAsync(`DELETE FROM expenses WHERE id = ?`, [id]);
 	return result.changes > 0;
+}
+
+export async function removeAllExpenses() {
+	await db.runAsync('DELETE FROM expenses');
 }
 
 export async function addExpense(

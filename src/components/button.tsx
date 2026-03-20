@@ -5,7 +5,7 @@ import FTextBold from '../components/ftextBold';
 
 type ButtonProps = {
 	onPress?: () => void,
-		text: string,
+	text: string,
 	style?: StyleProp<ViewStyle>,
 	disabled: boolean
 };

@@ -36,12 +36,12 @@ const ExpenseModal = forwardRef(({ currency, onSubmit }: any, ref: any) => {
 
 				<View style={common.numInputContainer}>
 					<FTextBold 
-						style={[common.bigInputText, {color: theme.minorText}]}
+						style={[common.bigText, {color: theme.minorText}]}
 					>
 						{currency}
 					</FTextBold>
 					<BottomSheetTextInput
-						style={[common.numInput, common.bigInputText]}
+						style={[common.numInput, common.bigText]}
 						keyboardType="decimal-pad"
 						placeholder="0.00"
 						placeholderTextColor={theme.minorText}

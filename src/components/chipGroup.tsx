@@ -30,7 +30,7 @@ export default function ChipGroup({
 				<Pressable 
 					key={item.id}
 					style={index === selectedIndex ? common.selectedChip : common.chip}
-					onPress={()=>{ setSelectedIndex(index); onSelectChip(data[index]) }}
+					onPress={()=>{ setSelectedIndex(index); if(onSelectChip) onSelectChip(data[index]) }}
 				>
 					<FText 
 						style={{
@@ -38,7 +38,7 @@ export default function ChipGroup({
 							color: index === selectedIndex ? theme.primary : theme.text
 						}}
 					>
-						{item.emoji} {item.text}
+						{item.emoji.length > 0 ? `${item.emoji} ` : ''}{item.text}
 					</FText>
 				</Pressable>
 			))}

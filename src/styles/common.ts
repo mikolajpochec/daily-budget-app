@@ -1,13 +1,16 @@
 import { StyleSheet } from 'react-native';
 import { StatusBar } from 'react-native';
 
+export const BASE_GAP = 16;
+
 export const getCommonStyle = (theme) => {
-	const DEFAULT_GAP = 16;
 	return StyleSheet.create({
 		mainView: {
 			marginTop: StatusBar.currentHeight,
-			backgroundColor: theme.background, padding: DEFAULT_GAP * 1.25,
-			gap: DEFAULT_GAP,
+			backgroundColor: theme.background,
+			paddingHorizontal: BASE_GAP * 1.5,
+			paddingVertical: BASE_GAP * 2,
+			gap: BASE_GAP,
 			flex: 1
 		},
 		apart: {
@@ -16,7 +19,7 @@ export const getCommonStyle = (theme) => {
 			justifyContent: 'space-between',
 		},
 		halfGap: {
-			gap: DEFAULT_GAP / 2
+			gap: BASE_GAP / 2
 		},
 		text: {
 			color: theme.text,
@@ -38,13 +41,13 @@ export const getCommonStyle = (theme) => {
 			borderWidth: 1,
 			borderColor: `${theme.secondaryText}33`,
 			backgroundColor: theme.foreground,
-			paddingHorizontal: DEFAULT_GAP,
-			paddingVertical: DEFAULT_GAP * 1.25,
+			paddingHorizontal: BASE_GAP,
+			paddingVertical: BASE_GAP * 1.25,
 			overflow: 'hidden'
 		},
 		lessPaddingForPanel:{
 			borderRadius: 12,
-			paddingVertical: DEFAULT_GAP,
+			paddingVertical: BASE_GAP,
 		},
 		iconButton: {
 			width: 38,
@@ -95,7 +98,7 @@ export const getCommonStyle = (theme) => {
 		},
 		statContainer: {
 			flexDirection: 'row',
-			gap: DEFAULT_GAP / 2
+			gap: BASE_GAP / 2
 		},
 		statCard: {
 			flex: 1,
@@ -127,8 +130,11 @@ export const getCommonStyle = (theme) => {
 			justifyContent: 'center',
 			alignItems: 'center'
 		},
+		buttonDangerous: {
+			backgroundColor: theme.bad
+		},
 		bottomMargin: {
-			marginBottom: DEFAULT_GAP
+			marginBottom: BASE_GAP
 		},
 		modalHandleIndicator: {
 			backgroundColor: `${theme.minorText}55`
@@ -143,17 +149,14 @@ export const getCommonStyle = (theme) => {
 		},
 		modal: {
 			backgroundColor: theme.foreground,
-			padding: DEFAULT_GAP
-		},
-		bigInputText: {
-			fontSize: 38,
+			padding: BASE_GAP
 		},
 		numInputContainer: {
 			flexDirection: 'row',
 			borderBottomWidth: 1,
 			borderBottomColor: theme.primary,
 			alignItems: 'center',
-			marginBottom: DEFAULT_GAP
+			marginBottom: BASE_GAP
 		},
 		numInput: {
 			fontFamily: 'Bricolage Grotesque Bold',
@@ -161,15 +164,15 @@ export const getCommonStyle = (theme) => {
 			flex: 1,
 		},
 		list: {
-			marginBottom: DEFAULT_GAP,
+			marginBottom: BASE_GAP,
 			borderRadius: 10
 		},
 		listSeparator: {
-			height: DEFAULT_GAP * 0.65
+			height: BASE_GAP * 0.65
 		},
 		listEntryContainer: {
 			backgroundColor: theme.foreground,
-			padding: DEFAULT_GAP * 0.8,
+			padding: BASE_GAP * 0.8,
 			borderRadius: 14,
 			flexDirection: 'row',
 			alignItems: 'center'
@@ -179,8 +182,8 @@ export const getCommonStyle = (theme) => {
 			flexDirection: 'row',
 			justifyContent: 'space-between',
 			alignItems: 'center',
-			paddingLeft: DEFAULT_GAP,
-			paddingRight: DEFAULT_GAP
+			paddingLeft: BASE_GAP,
+			paddingRight: BASE_GAP
 		},
 		listEntryIcon: {
 			backgroundColor: `${theme.primary}55`,
@@ -204,42 +207,65 @@ export const getCommonStyle = (theme) => {
 		},
 		chipGroup: {
 			flexDirection: 'row',
-			gap: DEFAULT_GAP * 0.38,
+			gap: BASE_GAP * 0.38,
 			flexWrap: 'wrap',
-			marginVertical: DEFAULT_GAP
+			marginVertical: BASE_GAP
 		},
 		chip: {
 			borderWidth: 1,
 			borderColor: `${theme.minorText}55`,
 			backgroundColor: theme.foreground,
-			paddingHorizontal: DEFAULT_GAP * 0.8,
-			paddingVertical: DEFAULT_GAP * 0.4,
+			paddingHorizontal: BASE_GAP * 0.8,
+			paddingVertical: BASE_GAP * 0.4,
 			borderRadius: 10
 		},
 		selectedChip: {
 			borderWidth: 1,
 			borderColor: theme.primary,
 			backgroundColor: `${theme.primary}22`,
-			paddingHorizontal: DEFAULT_GAP * 0.8,
-			paddingVertical: DEFAULT_GAP * 0.4,
+			paddingHorizontal: BASE_GAP * 0.8,
+			paddingVertical: BASE_GAP * 0.4,
 			borderRadius: 10,
 		},
 		textInput: {
 			color: theme.text,
-			paddingVertical: DEFAULT_GAP * 0.8,
-			paddingHorizontal: DEFAULT_GAP * 0.68,
-			marginVertical: DEFAULT_GAP * 0.75,
+			paddingVertical: BASE_GAP * 0.8,
+			paddingHorizontal: BASE_GAP * 1.25,
+			marginVertical: BASE_GAP * 0.75,
 			borderRadius: 12,
 			borderWidth: 1,
 			borderColor: `${theme.minorText}55`,
+			fontFamily: 'Bricolage Grotesque',
 		},
 		stackHeader: {
 			flexDirection: 'row',
-			gap: DEFAULT_GAP,
+			gap: BASE_GAP,
 			alignItems: 'center'
 		},
 		listLike: {
-			gap: DEFAULT_GAP * 0.5
+			gap: BASE_GAP * 0.5
+		},
+		bigText: {
+			fontSize: 38,
+		},
+		centerOnScreen: {
+			flex: 1,
+			justifyContent: 'center',
+		},
+		stepIndicator: {
+			width: 6,
+			height: 6,
+			borderRadius: '50%',
+			backgroundColor: theme.secondaryText
+		},
+		stepIndicatorSelected: {
+			width: 20,
+			height: 6,
+			borderRadius: 3,
+			backgroundColor: theme.primary
+		},
+		bigSeparatorVertical: {
+			height: BASE_GAP * 2
 		}
 	})
 }
