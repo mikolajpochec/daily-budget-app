@@ -17,8 +17,8 @@ import { setKey } from '../src/utils/storage';
 
 export default function OnboardingScreen() {
 	const STEP_GET_STARTED = 0;
+	const STEP_MONTHLY_BUDGET = 1;
 	const NUMBER_OF_STEPS = 3;
-
 
 	const [step, setStep] = useState(STEP_GET_STARTED);
 	const [currency, setCurrency] = useState(currencies[0].text);
@@ -176,6 +176,7 @@ export default function OnboardingScreen() {
 					</View>
 					<Button 
 						text={ getButtonText() }
+						disabled={ step === STEP_MONTHLY_BUDGET && !parseInt(monthlyBudget) }
 						onPress={() => { 
 							setStep(step + 1);
 						}}
