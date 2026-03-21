@@ -35,7 +35,9 @@ function ExpenseListItem({ item, currency, onEntryRemoveRequest }: ExpensesListI
 	return (
 		<View style={[common.listEntryContainer]}>
 			<View style={common.listEntryIcon}>
-				<FText>{categories.find((e) => e.text === item.category)?.emoji}</FText>
+				<FText style={{fontSize: 18}}>
+					{categories.find((e) => e.text === item.category)?.emoji}
+				</FText>
 			</View>
 			<View 
 				style={common.listEntryCenter}

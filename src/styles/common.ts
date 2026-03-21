@@ -186,7 +186,7 @@ export const getCommonStyle = (theme) => {
 			paddingRight: BASE_GAP
 		},
 		listEntryIcon: {
-			backgroundColor: `${theme.primary}55`,
+			//backgroundColor: `${theme.primary}55`,
 			height: 36,
 			width: 36,
 			justifyContent: 'center',

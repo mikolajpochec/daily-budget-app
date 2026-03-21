@@ -1,15 +1,10 @@
 import Expense from '../types/expense';
+import getLocalDateString from '../utils/getLocalDateString';
 import * as SQLite from 'expo-sqlite';
 
 var db;
 var sql;
-
-function getLocalDateString(date: Date) {
-  const year  = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day   = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
+const FULL_DAY_MS = 86_400_000;
 
 export async function initDB() {
 	if(!db) {
@@ -26,29 +21,38 @@ export async function initDB() {
 	}
 }
 
+export async function getExpensesFromPeriod(startDate: Date, endDate: Date): Promise<Expense[]> {
+	const start = new Date(getLocalDateString(startDate)).getTime();
+	const end = new Date(getLocalDateString(endDate)).getTime() + FULL_DAY_MS - 1;
+	const result = await db.getAllAsync<Expense>(
+		`SELECT * FROM expenses WHERE createdAt >= ? AND createdAt <= ? ORDER BY createdAt ASC`,
+		[start, end]
+	);
+	return result;
+}
+
 export async function getPeriodSpendingData(startDate: Date, endDate: Date) {
 	const start = new Date(getLocalDateString(startDate)).getTime();
-	const end = new Date(getLocalDateString(endDate)).getTime();
+	const end = new Date(getLocalDateString(endDate)).getTime() + FULL_DAY_MS - 1;
 	const now = new Date();
 	const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-	const startOfYesterday = startOfToday - 86_400_000;
+	const startOfYesterday = startOfToday - FULL_DAY_MS;
 	const result = await db.getFirstAsync<{
-		spentYesterday:   number | null;
-		spentBeforeToday: number | null;
-		spentToday:       number | null;
+		spentYesterday: number | null;
+		spentInPeriod:  number | null;
+		spentToday:     number | null;
 	}>(`
 	   SELECT
-	   SUM(amount) FILTER (WHERE createdAt >= ? AND createdAt < ?) AS spentYesterday,
-		   SUM(amount) FILTER (WHERE createdAt < ?)                    AS spentBeforeToday,
-	   SUM(amount) FILTER (WHERE createdAt >= ?)                   AS spentToday
+	   SUM(amount) FILTER (WHERE createdAt >= ? AND createdAt < ?)  AS spentYesterday,
+	   SUM(amount) FILTER (WHERE createdAt >= ? AND createdAt <= ?) AS spentInPeriod,
+	   SUM(amount) FILTER (WHERE createdAt >= ?)                    AS spentToday
 	   FROM expenses
 	   WHERE createdAt >= ? AND createdAt <= ?
-		   `, [startOfYesterday, startOfToday, startOfToday, startOfToday, start, end]);
-
+		   `, [startOfYesterday, startOfToday, start, end, startOfToday, start, end]);
 	   return {
-		   spentYesterday:   result?.spentYesterday   ?? 0,
-		   spentBeforeToday: result?.spentBeforeToday ?? 0,
-		   spentToday:       result?.spentToday       ?? 0,
+		   spentYesterday: result?.spentYesterday ?? 0,
+		   spentInPeriod:  result?.spentInPeriod  ?? 0,
+		   spentToday:     result?.spentToday     ?? 0,
 	   };
 }
 
