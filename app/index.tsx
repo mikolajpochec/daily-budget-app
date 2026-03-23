@@ -177,12 +177,12 @@ export default function HomeScreen() {
 						<View style={common.amountContainer}>
 							<FText style={common.currency}>{currency}</FText>
 							<FTextBold style={common.bigAmount}>
-								{todayBudget - spendingData.spentToday}
+								{formulas.round2(todayBudget - spendingData.spentToday)}
 							</FTextBold>
 						</View>
 						<FText style={common.secondaryText}>
 							of <FTextBold>
-								{todayBudget} {currency}
+								{formulas.round2(todayBudget)} {currency}
 							</FTextBold> daily budget
 						</FText>
 						<View style={common.circleDecoration}/>
@@ -196,7 +196,7 @@ export default function HomeScreen() {
 						<View style={[common.panel, common.statCard]}>
 							<FText style={common.secondaryText}>SPENT TODAY</FText>
 							<FTextBold style={common.statAmount}>
-								{spendingData.spentToday} {currency}
+								{formulas.round2(spendingData.spentToday)} {currency}
 							</FTextBold>
 							<FText style={common.minorText}>{expensesData.length} expenses</FText>
 						</View>
@@ -213,17 +213,19 @@ export default function HomeScreen() {
 						<View style={[common.panel, common.statCard]}>
 							<FText style={common.secondaryText}>MONTHLY SPENT</FText>
 							<FTextBold style={common.statAmount}>
-								{spendingData.spentInPeriod} {currency}
+								{formulas.round2(spendingData.spentInPeriod)} {currency}
 							</FTextBold>
-							<FText style={common.minorText}>of {monthlyBudget} {currency}</FText>
+							<FText style={common.minorText}>of {
+								formulas.round2(monthlyBudget)
+								} {currency}</FText>
 						</View>
 						<View style={[common.panel, common.statCard]}>
 							<FText style={common.secondaryText}>MONTHLY LEFT</FText>
 							<FTextBold style={common.statAmount}>
-								{monthlyBudget - spendingData.spentInPeriod} {currency}
+								{formulas.round2(monthlyBudget - spendingData.spentInPeriod)} {currency}
 							</FTextBold>
 							<FText style={common.minorText}>
-								Tomorrow: {nextDayBudget} {currency}
+								Tomorrow: {formulas.round2(nextDayBudget)} {currency}
 							</FText>
 						</View>
 					</View>
