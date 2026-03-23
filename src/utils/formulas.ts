@@ -47,7 +47,10 @@ export function calculateDailyBudget(
 
 	const expensesByDay = new Map<string, number>();
 	for (const expense of expensesInCurrentPeriod) {
-		expensesByDay.set(expense.localDate, (expensesByDay.get(expense.localDate) ?? 0) + expense.amount);
+		expensesByDay.set(
+			expense.localDate, 
+			(expensesByDay.get(expense.localDate) ?? 0) + expense.amount
+		);
 	}
 
 	const day = new Date(getLocalDateString(startDate));

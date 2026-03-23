@@ -13,6 +13,7 @@ import { strategies } from '../src/constants/strategies';
 import { setKey } from '../src/utils/storage';
 import Button from '../src/components/button';
 import { initDB, removeAllExpenses } from '../src/utils/sqldb';
+import { round2 } from '../src/utils/formulas';
 
 export default function SettingsScreen() {
 	const { currency, startDay, monthlyBudget, strategy } = useLocalSearchParams();
@@ -37,7 +38,7 @@ export default function SettingsScreen() {
 		<View style={common.mainView}>
 			<View style={common.stackHeader}
 			>
-				<IconButton iconName='arrow-left' onPress={()=>{ router.back(); }}/>
+				<IconButton iconName='arrow-back' onPress={()=>{ router.back(); }}/>
 				<FTextBold style={[common.headerText, common.boldText]}>
 					Settings
 				</FTextBold>
@@ -46,7 +47,9 @@ export default function SettingsScreen() {
 			<View style={common.listLike}>
 				<View style={[common.panel, common.apart, common.lessPaddingForPanel]}>
 					<FText>Monthly budget</FText>
-					<FText style={common.currency}>{monthlyBudget} {currency}</FText>
+					<FText style={common.currency}>
+						{monthlyBudget} {currency}
+					</FText>
 				</View>
 				<View style={[common.panel, common.apart, common.lessPaddingForPanel]}>
 					<FText>Month start</FText>
