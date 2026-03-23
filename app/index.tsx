@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { View, ActivityIndicator } from 'react-native';
 import { getLocales } from 'expo-localization';
 import { getCommonStyle } from '../src/styles/common';
@@ -96,37 +96,46 @@ export default function HomeScreen() {
 		));
 	};
 
-	useEffect(() => {
-		(async () => {
-			await initDB();
-			const savedStartDay = parseInt(await getValue('start-day'));
-			const periodStart = formulas.getCurrentPeriodStart(savedStartDay);
-			const expenses = await getDailyExpenses(new Date());
-			const periodExpenses = await getExpensesFromPeriod(periodStart, new Date());
-			setExpensesData(expenses);
-			setDbReady(true);
-			const budget = parseInt(await getValue('monthly-budget'));
-			const strat = await getValue('strategy');
-			setMonthlyBudget(budget);
-			setStrategy(strat);
-			setStartDay(savedStartDay);
+	const initData = async () => {
+		await initDB();	
+		const isOnboarded = await getValue('onboarded') == 'true';
+		if (!isOnboarded) {
+			router.navigate('/onboarding');
+			return;
+		}
+		const savedStartDay = parseInt(await getValue('start-day'));
+		const periodStart = formulas.getCurrentPeriodStart(savedStartDay);
+		const expenses = await getDailyExpenses(new Date());
+		const periodExpenses = await getExpensesFromPeriod(periodStart, new Date());
+		setExpensesData(expenses);
+		setDbReady(true);
+		const budget = parseInt(await getValue('monthly-budget'));
+		const strat = await getValue('strategy');
+		setMonthlyBudget(budget);
+		setStrategy(strat);
+		setStartDay(savedStartDay);
 
-			const isOnboarded = await getValue('onboarded') == 'true';
-			if (!isOnboarded) {
-				router.navigate('/onboarding');
-			}
-			setCurrency(await getValue('currency'));
-			setOnboarded(isOnboarded);
-			setTodayBudget(
-				formulas.calculateDailyBudget(
-					budget,
-					periodStart,
-					periodExpenses,
-					strat
-				)
-			);
-			await refreshData(budget, strat, savedStartDay);
-		})();
+		setCurrency(await getValue('currency'));
+		setOnboarded(isOnboarded);
+		setTodayBudget(
+			formulas.calculateDailyBudget(
+				budget,
+				periodStart,
+				periodExpenses,
+				strat
+			)
+		);
+		await refreshData(budget, strat, savedStartDay);
+	};
+
+	useFocusEffect(
+		React.useCallback(() => {
+			initData();
+		}, [])
+	);
+
+	useEffect(() => {
+		(async () => initData())();
 	}, []);
 
 	useEffect(() => {
