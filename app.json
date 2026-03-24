@@ -1,12 +1,13 @@
 {
   "expo": {
     "name": "Daily Budget",
+	"description": "Track your expenses, set a monthly budget, and stay in control of your finances with smart strategies and a clean, easy-to-use interface.",
     "slug": "daily-budget-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "dailybudgetapp",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
