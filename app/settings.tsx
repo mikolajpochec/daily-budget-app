@@ -9,7 +9,7 @@ import { useLocalSearchParams } from 'expo-router';
 import IconButton from '../src/components/iconButton';
 import ListPicker from '../src/components/listPicker';
 import { strategies } from '../src/constants/strategies';
-import { setKey } from '../src/utils/storage';
+import { setKey, getValue } from '../src/utils/storage';
 import Button from '../src/components/button';
 import { initDB, removeAllExpenses } from '../src/utils/sqldb';
 import { round2 } from '../src/utils/formulas';
@@ -70,6 +70,13 @@ export default function SettingsScreen() {
 		if(savedAppThemePreference === null) return;
 		setSelectedMode(savedAppThemePreference);
 	}, [savedAppThemePreference]);
+
+	useEffect(() => {
+		(async () => {
+			const saved = await getValue('app-theme');
+			setSelectedMode(saved ?? 'auto');
+		})();
+	}, []);
 
 	return (
 		<View style={common.mainView}>

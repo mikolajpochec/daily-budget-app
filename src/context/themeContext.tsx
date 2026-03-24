@@ -23,6 +23,7 @@ export const ThemeProvider = ({ children }) => {
 			return;
 		}
 		setIsDarkMode(theme === 'dark');
+		setSavedAppThemePreference(theme);
 	};
 
 	const loadThemeSetting = async () => {
@@ -45,7 +46,7 @@ export const ThemeProvider = ({ children }) => {
 			isDarkMode, 
 			toggleTheme, 
 			setTheme,
-			savedAppThemePreference 
+			savedAppThemePreference
 			}}
 		>
 			{children}
