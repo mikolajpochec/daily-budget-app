@@ -162,84 +162,94 @@ export default function HomeScreen() {
 							Daily Budget
 						</FTextBold>
 					</View>
-					<IconButton 
-						iconName='settings-outline'
-						onPress={()=>{ 
-							router.navigate({
-								pathname: '/settings',
-								params: {
-									currency,
-									startDay,
-									monthlyBudget,
-									strategy
-								},
-							});
-						}}
-					/>
+					<View style={common.icons}>
+						<IconButton 
+							iconName='settings-outline'
+							onPress={()=>{ 
+								router.navigate({
+									pathname: '/settings',
+									params: {
+										currency,
+										startDay,
+										monthlyBudget,
+										strategy
+									},
+								});
+							}}
+						/>
+					</View>
 				</View>
 				{/* --- END HEADER --- */}
 
-				{/* --- BEGIN PANEL --- */}
-				<View>
-					<View style={common.panel}>
-						<FText style={common.secondaryText}>REMAINING TODAY</FText>
-						<View style={common.amountContainer}>
-							<FText style={common.currency}>{currency}</FText>
-							<FTextBold style={common.bigAmount}>
-								{formulas.round2(todayBudget - spendingData.spentToday)}
-							</FTextBold>
-						</View>
-						<FText style={common.secondaryText}>
-							of <FTextBold>
-								{formulas.round2(todayBudget)} {currency}
-							</FTextBold> daily budget
-						</FText>
-						<View style={common.circleDecoration}/>
-					</View>
-				</View>
-				{/* --- END PANEL --- */}
-
-				{/* --- BEGIN CARDS --- */}
 				<View style={common.halfGap}>
-					<View style={common.statContainer}>
-						<View style={[common.panel, common.statCard]}>
-							<FText style={common.secondaryText}>SPENT TODAY</FText>
-							<FTextBold style={common.statAmount}>
-								{formulas.round2(spendingData.spentToday)} {currency}
-							</FTextBold>
-							<FText style={common.minorText}>{expensesData.length} expenses</FText>
-						</View>
-						<View style={[common.panel, common.statCard]}>
-							<FText style={common.secondaryText}>DAYS LEFT</FText>
-							<FTextBold style={common.statAmount}>
-								{ formulas.daysLeft(startDay) }
-							</FTextBold>
-							<FText style={common.minorText}>in this period</FText>
-						</View>
-					</View>
-
-					<View style={common.statContainer}>
-						<View style={[common.panel, common.statCard]}>
-							<FText style={common.secondaryText}>MONTHLY SPENT</FText>
-							<FTextBold style={common.statAmount}>
-								{formulas.round2(spendingData.spentInPeriod)} {currency}
-							</FTextBold>
-							<FText style={common.minorText}>of {
-								formulas.round2(monthlyBudget)
-								} {currency}</FText>
-						</View>
-						<View style={[common.panel, common.statCard]}>
-							<FText style={common.secondaryText}>MONTHLY LEFT</FText>
-							<FTextBold style={common.statAmount}>
-								{formulas.round2(monthlyBudget - spendingData.spentInPeriod)} {currency}
-							</FTextBold>
-							<FText style={common.minorText}>
-								Tomorrow: {formulas.round2(nextDayBudget)} {currency}
+					{/* --- BEGIN PANEL --- */}
+					<View>
+						<View style={common.panel}>
+							<FText style={common.secondaryText}>REMAINING TODAY</FText>
+							<View style={common.amountContainer}>
+								<FText style={common.currency}>{currency}</FText>
+								<FTextBold style={[
+									common.bigAmount,
+									(todayBudget - spendingData.spentToday) < 0 && { color: theme.bad }
+								]}>
+									{formulas.round2(todayBudget - spendingData.spentToday)}
+								</FTextBold>
+							</View>
+							<FText style={common.secondaryText}>
+								of <FTextBold>
+									{formulas.round2(todayBudget)} {currency}
+								</FTextBold> daily budget
 							</FText>
+							<View style={common.circleDecoration}/>
 						</View>
 					</View>
+					{/* --- END PANEL --- */}
+
+					{/* --- BEGIN CARDS --- */}
+					<View style={common.halfGap}>
+						<View style={common.statContainer}>
+							<View style={[common.panel, common.statCard]}>
+								<FText style={common.secondaryText}>SPENT TODAY</FText>
+								<FTextBold style={common.statAmount}>
+									{formulas.round2(spendingData.spentToday)} {currency}
+								</FTextBold>
+								<FText style={common.minorText}>{expensesData.length} expenses</FText>
+							</View>
+							<View style={[common.panel, common.statCard]}>
+								<FText style={common.secondaryText}>DAYS LEFT</FText>
+								<FTextBold style={common.statAmount}>
+									{ formulas.daysLeft(startDay) }
+								</FTextBold>
+								<FText style={common.minorText}>in this period</FText>
+							</View>
+						</View>
+
+						<View style={common.statContainer}>
+							<View style={[common.panel, common.statCard]}>
+								<FText style={common.secondaryText}>MONTHLY SPENT</FText>
+								<FTextBold style={common.statAmount}>
+									{formulas.round2(spendingData.spentInPeriod)} {currency}
+								</FTextBold>
+								<FText style={common.minorText}>of {
+									formulas.round2(monthlyBudget)
+									} {currency}</FText>
+							</View>
+							<View style={[common.panel, common.statCard]}>
+								<FText style={common.secondaryText}>MONTHLY LEFT</FText>
+								<FTextBold style={[
+									common.statAmount,
+									(monthlyBudget - spendingData.spentInPeriod) < 0 && { color: theme.bad }
+								]}>
+									{formulas.round2(monthlyBudget - spendingData.spentInPeriod)} {currency}
+								</FTextBold>
+								<FText style={common.minorText}>
+									Tomorrow: {formulas.round2(nextDayBudget)} {currency}
+								</FText>
+							</View>
+						</View>
+					</View>
+					{/* --- END CARDS --- */}
 				</View>
-				{/* --- END CARDS --- */}
 
 				<FTextBold>Today's expenses</FTextBold>
 				<View style={{ flex: 1, justifyContent: 'space-between' }}>

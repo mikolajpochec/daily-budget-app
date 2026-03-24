@@ -266,6 +266,10 @@ export const getCommonStyle = (theme) => {
 		},
 		bigSeparatorVertical: {
 			height: BASE_GAP * 2
+		},
+		icons: {
+			flexDirection: 'row',
+			gap: BASE_GAP / 2
 		}
 	})
 }
