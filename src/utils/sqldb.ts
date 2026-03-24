@@ -2,36 +2,40 @@ import Expense from '../types/expense';
 import getLocalDateString from '../utils/getLocalDateString';
 import * as SQLite from 'expo-sqlite';
 
-var db;
-var sql;
 const FULL_DAY_MS = 86_400_000;
 
-export async function initDB() {
-	if(!db) {
-		db = await SQLite.openDatabaseAsync('transactions.db');
-		sql = db.sql;
-		await db.execAsync(`CREATE TABLE IF NOT EXISTS expenses (
-			id          INTEGER PRIMARY KEY AUTOINCREMENT,
-			amount      REAL NOT NULL CHECK (amount > 0),
-			category    TEXT NOT NULL,
-			description TEXT,
-			createdAt   INTEGER,
-			localDate   TEXT
-		);`);
+let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
+
+export async function initDB(): Promise<SQLite.SQLiteDatabase> {
+	if (!dbPromise) {
+		dbPromise = (async () => {
+			const instance = await SQLite.openDatabaseAsync('transactions.db');
+			await instance.execAsync(`CREATE TABLE IF NOT EXISTS expenses (
+				id          INTEGER PRIMARY KEY AUTOINCREMENT,
+				amount      REAL NOT NULL CHECK (amount > 0),
+				category    TEXT NOT NULL,
+				description TEXT,
+				createdAt   INTEGER,
+				localDate   TEXT
+			);`);
+			return instance;
+		})();
 	}
+	return dbPromise;
 }
 
 export async function getExpensesFromPeriod(startDate: Date, endDate: Date): Promise<Expense[]> {
+	const db = await initDB();
 	const start = new Date(getLocalDateString(startDate)).getTime();
 	const end = new Date(getLocalDateString(endDate)).getTime() + FULL_DAY_MS - 1;
-	const result = await db.getAllAsync<Expense>(
+	return db.getAllAsync<Expense>(
 		`SELECT * FROM expenses WHERE createdAt >= ? AND createdAt <= ? ORDER BY createdAt ASC`,
 		[start, end]
 	);
-	return result;
 }
 
 export async function getPeriodSpendingData(startDate: Date, endDate: Date) {
+	const db = await initDB();
 	const start = new Date(getLocalDateString(startDate)).getTime();
 	const end = new Date(getLocalDateString(endDate)).getTime() + FULL_DAY_MS - 1;
 	const now = new Date();
@@ -48,61 +52,65 @@ export async function getPeriodSpendingData(startDate: Date, endDate: Date) {
 	   SUM(amount) FILTER (WHERE createdAt >= ?)                    AS spentToday
 	   FROM expenses
 	   WHERE createdAt >= ? AND createdAt <= ?
-		   `, [startOfYesterday, startOfToday, start, end, startOfToday, start, end]);
-	   return {
-		   spentYesterday: result?.spentYesterday ?? 0,
-		   spentInPeriod:  result?.spentInPeriod  ?? 0,
-		   spentToday:     result?.spentToday     ?? 0,
-	   };
+	`, [startOfYesterday, startOfToday, start, end, startOfToday, start, end]);
+	return {
+		spentYesterday: result?.spentYesterday ?? 0,
+		spentInPeriod:  result?.spentInPeriod  ?? 0,
+		spentToday:     result?.spentToday     ?? 0,
+	};
 }
 
-export async function getDailyExpenses(date: Date) : Expense[] {
+export async function getDailyExpenses(date: Date): Promise<Expense[]> {
+	const db = await initDB();
 	const localDate = getLocalDateString(date);
-	const result = 
-		await sql<Expense>`SELECT * FROM expenses WHERE localDate=${localDate}`;
-	return result;
+	return db.getAllAsync<Expense>(
+		`SELECT * FROM expenses WHERE localDate = ?`,
+		[localDate]
+	);
 }
 
-export async function removeExpense(id: number) {
+export async function removeExpense(id: number): Promise<boolean> {
+	const db = await initDB();
 	const result = await db.runAsync(`DELETE FROM expenses WHERE id = ?`, [id]);
 	return result.changes > 0;
 }
 
-export async function removeAllExpenses() {
+export async function removeAllExpenses(): Promise<void> {
+	const db = await initDB();
 	await db.runAsync('DELETE FROM expenses');
 }
 
 export async function addExpense(
 	amount: number,
 	category: string,
-	description?: string
+	description?: string,
+	date?: Date
 ): Promise<Expense> {
-	const now = new Date();
+	const db = await initDB();
+	const now = date ?? new Date();
 	const createdAt = now.getTime();
 	const localDate = getLocalDateString(now);
-
 	const statement = await db.prepareAsync(
 		`INSERT INTO expenses (amount, category, description, createdAt, localDate)
-		VALUES ($amount, $category, $description, $createdAt, $localDate)`);
-
-		try {
-			const result = await statement.executeAsync({
-				$amount: amount,
-				$category: category,
-				$description: description || null,
-				$createdAt: createdAt,
-				$localDate: localDate,
-			});
-
-			return {
-				id: result.lastInsertRowId,
-				amount,
-				category,
-				description,
-				createdAt,
-				localDate,
-			};
-		} finally {
-			await statement.finalizeAsync();
-		}
+		VALUES ($amount, $category, $description, $createdAt, $localDate)`
+	);
+	try {
+		const result = await statement.executeAsync({
+			$amount: amount,
+			$category: category,
+			$description: description || null,
+			$createdAt: createdAt,
+			$localDate: localDate,
+		});
+		return {
+			id: result.lastInsertRowId,
+			amount,
+			category,
+			description,
+			createdAt,
+			localDate,
+		};
+	} finally {
+		await statement.finalizeAsync();
+	}
 }

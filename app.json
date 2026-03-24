@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Daily Budget",
-	"description": "Track your expenses, set a monthly budget, and stay in control of your finances with smart strategies and a clean, easy-to-use interface.",
+    "description": "Track your expenses, set a monthly budget, and stay in control of your finances with smart strategies and a clean, easy-to-use interface.",
     "slug": "daily-budget-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -24,7 +24,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "package": "com.anonymous.dailybudgetapp",
-	  "softwareKeyboardLayoutMode": "pan"
+      "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,7 +33,8 @@
       "expo-router",
       "expo-localization",
       "expo-font",
-      "expo-sqlite"
+      "expo-sqlite",
+      "@react-native-community/datetimepicker"
     ]
   }
 }

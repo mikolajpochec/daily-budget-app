@@ -164,6 +164,11 @@ export default function HomeScreen() {
 					</View>
 					<View style={common.icons}>
 						<IconButton 
+							iconName='bar-chart-outline'
+							onPress={()=>{ router.navigate({ pathname: '/history' });
+							}}
+						/>
+						<IconButton 
 							iconName='settings-outline'
 							onPress={()=>{ 
 								router.navigate({
