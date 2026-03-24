@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "daily-budget-app",
+    "name": "Daily Budget",
     "slug": "daily-budget-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,7 +13,7 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false
     },
     "android": {
       "adaptiveIcon": {
