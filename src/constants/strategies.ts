@@ -1,3 +1,5 @@
+import { PickerItem } from '../components/listPicker.tsx';
+
 export const strategies: PickerItem[] = [
 	{
 		id: 'subtract',

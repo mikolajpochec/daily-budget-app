@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View } from 'react-native';
 import FText from '../src/components/ftext';
 import FTextBold from '../src/components/ftextBold';
@@ -7,24 +7,35 @@ import { useTheme } from '../src/hooks/useTheme';
 import { useRouter } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router';
 import IconButton from '../src/components/iconButton';
-import { getValue } from '../src/utils/storage';
 import ListPicker from '../src/components/listPicker';
 import { strategies } from '../src/constants/strategies';
 import { setKey } from '../src/utils/storage';
 import Button from '../src/components/button';
 import { initDB, removeAllExpenses } from '../src/utils/sqldb';
 import { round2 } from '../src/utils/formulas';
+import { PickerItem } from '../src/components/listPicker';
+import { ThemeContext } from '../src/context/themeContext';
 
 export default function SettingsScreen() {
 	const { currency, startDay, monthlyBudget, strategy } = useLocalSearchParams();
 	const [selectedStrategy, setSelectedStrategy] = useState(strategy);
+	const [selectedMode, setSelectedMode] = useState('auto');
+	const { isDarkMode, toggleTheme, setTheme, savedAppThemePreference } =
+		useContext(ThemeContext);
+	const { appTheme, setAppTheme } = useState(null);
 	const { theme } = useTheme();
 	const common = getCommonStyle(theme);
 	const router = useRouter();
 
-	const handleSelect = (value) => {
+	const handleStrategySelect = (value) => {
 		setSelectedStrategy(value);
 		setKey('strategy', value);
+	};
+
+	const handleModeSelect = (value) => {
+		setSelectedMode(value);
+		setTheme(value);
+		setKey('app-theme', value);
 	};
 
 	const handleClearButtonPress = async () => {
@@ -33,6 +44,32 @@ export default function SettingsScreen() {
 		await removeAllExpenses();
 		router.navigate('/');
 	};
+
+	const themeModes: PickerItem[] = [
+		{
+			id: 'auto',
+			iconName: 'auto-mode',
+			title: 'Auto',
+			description: 'Use device theme.'
+		},
+		{
+			id: 'light',
+			iconName: 'white-balance-sunny',
+			title: 'Light',
+			description: 'Use light theme.'
+		},
+		{
+			id: 'dark',
+			iconName: 'moon-last-quarter',
+			title: 'Dark',
+			description: 'Use dark theme.'
+		}
+	];
+
+	useEffect(() => {
+		if(savedAppThemePreference === null) return;
+		setSelectedMode(savedAppThemePreference);
+	}, [savedAppThemePreference]);
 
 	return (
 		<View style={common.mainView}>
@@ -60,7 +97,13 @@ export default function SettingsScreen() {
 			<ListPicker
 				items={strategies}
 				selectedId={selectedStrategy}
-				onSelect={handleSelect}
+				onSelect={handleStrategySelect}
+			/>
+			<FText style={common.sectionHeader}>APP THEME</FText>
+			<ListPicker
+				items={themeModes}
+				selectedId={selectedMode}
+				onSelect={handleModeSelect}
 			/>
 			<FText style={common.sectionHeader}>DATA</FText>
 			<Button 

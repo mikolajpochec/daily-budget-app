@@ -176,7 +176,10 @@ export default function OnboardingScreen() {
 					</View>
 					<Button 
 						text={ getButtonText() }
-						disabled={ step === STEP_MONTHLY_BUDGET && !parseInt(monthlyBudget) }
+						disabled={ 
+							step === STEP_MONTHLY_BUDGET 
+							&& !parseInt(monthlyBudget) 
+						}
 						onPress={() => { 
 							setStep(step + 1);
 						}}

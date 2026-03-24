@@ -6,10 +6,10 @@ export const BASE_GAP = 16;
 export const getCommonStyle = (theme) => {
 	return StyleSheet.create({
 		mainView: {
-			marginTop: StatusBar.currentHeight,
+			paddingTop: StatusBar.currentHeight + BASE_GAP * 1.5,
 			backgroundColor: theme.background,
 			paddingHorizontal: BASE_GAP * 1.5,
-			paddingVertical: BASE_GAP * 2,
+			paddingBottom: BASE_GAP * 1.5,
 			gap: BASE_GAP,
 			flex: 1
 		},
